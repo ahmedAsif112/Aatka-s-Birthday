@@ -44,7 +44,7 @@ export default function SuccessPage() {
                     <div className="text-6xl text-green-500 mb-6">✓</div>
 
                     <p className="text-lg text-gray-700 mb-4">
-                        Your <strong>30 Day Carnivore Diet Mealplan With 6 + Free Bonuses Cookbooks</strong> is on its way to your email.
+                        Your <strong>30 Day Briatric & Gastric Sleeve Guide Mealplan With 16 + Free Bonuses Cookbooks</strong> is on its way to your email.
                     </p>
 
                     <p className="text-lg text-gray-700 mb-2">

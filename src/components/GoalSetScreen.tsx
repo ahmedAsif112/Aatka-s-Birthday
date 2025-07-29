@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 const GoalSetScreen = () => {
     const router = useRouter();
     const handleSelect = () => {
-        router.push("/gender"); // Navigate to /target-route
+        router.push("/stage"); // Navigate to /target-route
     };
     return (
         <motion.div
