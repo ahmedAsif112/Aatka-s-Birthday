@@ -46,7 +46,7 @@ export default function WeightLossGoal() {
                     <button
                         onClick={() => setUnit("LB")}
                         className={`px-6 py-2 rounded-full text-[14px] font-medium transition shadow-md ${unit === "LB"
-                            ? "bg-[#F43F5E] text-white"
+                            ? "bg-green-600 text-white"
                             : "text-black bg-gray-200"
                             }`}
                     >
@@ -55,7 +55,7 @@ export default function WeightLossGoal() {
                     <button
                         onClick={() => setUnit("KG")}
                         className={`px-6 py-2 rounded-full text-[14px] font-medium transition shadow-md ${unit === "KG"
-                            ? "bg-[#F43F5E] text-white"
+                            ? "bg-green-600 text-white"
                             : "text-black bg-gray-200"
                             }`}
                     >
@@ -74,7 +74,7 @@ export default function WeightLossGoal() {
                                 handleSelect();
                             }}
                             className={`w-full text-left px-6 py-4 rounded-xl text-[14px] font-medium transition ${selectedIndex === index
-                                ? "bg-[#F43F5E] text-white"
+                                ? "bg-green-600 text-white"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}
                         >

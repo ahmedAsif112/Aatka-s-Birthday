@@ -42,13 +42,13 @@ export default function NameInput() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="text-4xl font-bold text-center border-b border-gray-300 focus:outline-none focus:border-[#F43F5E] bg-transparent w-full max-w-md mb-10"
+                    className="text-4xl font-bold text-center border-b border-gray-300 focus:outline-none focus:border-green-500 bg-transparent w-full max-w-md mb-10"
                     placeholder="Name"
                 />
 
                 <button
                     onClick={handleContinue}
-                    className="bg-[#F43F5E] hover:bg-[#e73556] text-white text-base font-semibold py-3 px-10 rounded-full transition duration-300"
+                    className="bg-green-500 hover:bg-green-400 text-white text-base font-semibold py-3 px-10 rounded-full transition duration-300"
                 >
                     Continue
                 </button>

@@ -55,7 +55,7 @@ export default function ActivityLevel() {
                             key={index}
                             onClick={() => handleSelect(index)}
                             className={`w-full text-left px-6 py-4 rounded-xl text-[14px] font-medium transition flex flex-col gap-1 ${selectedIndex === index
-                                ? "bg-[#F43F5E] text-white"
+                                ? "bg-green-500 text-white"
                                 : "bg-gray-100 hover:bg-gray-200 text-black"
                                 }`}
                         >

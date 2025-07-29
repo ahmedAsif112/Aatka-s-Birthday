@@ -20,6 +20,7 @@ export async function GET() {
 
     const logs = await prisma.emailLog.findMany({
       orderBy: { timestamp: 'desc' },
+      where:{site:"bariatric"}
     });
 
     console.log(`📊 Found ${logs.length} email logs`);

@@ -94,7 +94,7 @@ export default function BMIResult() {
                     breathing problems, and certain types of cancer
                 </p>
 
-                <button onClick={handleClick} className="mt-10 px-10 py-4 bg-rose-500 text-white text-lg rounded-full hover:bg-rose-600 transition">
+                <button onClick={handleClick} className="mt-10 px-10 py-4 bg-green-500 text-white text-lg rounded-full hover:bg-green-600 transition">
                     Continue
                 </button>
             </div>

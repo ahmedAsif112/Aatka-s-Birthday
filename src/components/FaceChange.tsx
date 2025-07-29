@@ -46,7 +46,7 @@ const FaceChange = () => {
 
                 <button
                     onClick={handleSelect}
-                    className="px-10 mt-8 py-3 bg-rose-500 hover:bg-rose-600 text-white text-lg font-semibold rounded-full"
+                    className="px-10 mt-8 py-3 bg-green-500 hover:bg-green-600 text-white text-lg font-semibold rounded-full"
                 >
                     Continue
                 </button>

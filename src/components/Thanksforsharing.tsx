@@ -25,7 +25,7 @@ const Thanksforsharing = () => {
 
                     {/* Subtext */}
                     <p className="text-[25px] font-medium">
-                        We know that losing weight can be challenging. <br />
+                        We know that losing weight and recovery can be challenging. <br />
                         <p className="pt-8 text-[20px] font-medium">Remember, this is not about the number on the scale, it’s about being a better and healthier version of yourself. You can do this 💪
 
 
@@ -34,7 +34,7 @@ const Thanksforsharing = () => {
 
                     {/* Continue Button */}
                     <button
-                        className="mt-20 bg-red-500 hover:bg-red-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+                        className="mt-20 bg-green-500 hover:bg-green-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
                         onClick={handleSelect}
                     >
                         Continue

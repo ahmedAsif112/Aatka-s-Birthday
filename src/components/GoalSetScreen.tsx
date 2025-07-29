@@ -31,7 +31,7 @@ const GoalSetScreen = () => {
 
                     {/* Continue Button */}
                     <button
-                        className="mt-20 bg-red-500 hover:bg-red-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+                        className="mt-20 bg-green-500 hover:bg-green-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
                         onClick={handleSelect}
                     >
                         Continue

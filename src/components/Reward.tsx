@@ -37,7 +37,7 @@ export default function SurpriseDiscount() {
             {revealed && (
                 <button
                     onClick={() => router.push('/checkout')}
-                    className="mt-10 px-6 py-3 bg-rose-500 text-white font-semibold rounded-full shadow hover:bg-pink-600 transition"
+                    className="mt-10 px-6 py-3 bg-green-500 text-white font-semibold rounded-full shadow hover:bg-green-600 transition"
                 >
                     Get your reward
                 </button>

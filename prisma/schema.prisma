@@ -12,6 +12,7 @@ model EmailLog {
   email     String
   timestamp DateTime @default(now())
   status    String?
+  site    String?
 
   @@map("EmailLog")
 }

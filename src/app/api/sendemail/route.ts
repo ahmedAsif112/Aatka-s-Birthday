@@ -27,9 +27,9 @@ export async function POST(req: Request) {
             to: email,
             subject: '30 Day Carnivore Diet Mealplan With 6 + Free Bonuses Cookbooks',
             html: `<p>Hi , hope you are well<br /><br/>  <div>
-Here's your Customised Meal-Plan with 6 free Carnivore Cookbooks .
+Here's your Customised Meal-Plan with 16+ free bariatric Cookbooks .
 Here you can Download 
-</div>: <a href="https://drive.google.com/drive/folders/1qZuHN_ZwpYtGDvVnu8--xKddsKK_Ojb_?usp=drive_link">Download PDF</a></p><br /><br /><div>Regards,<br/>Carnivore Diet Representative</div>`,
+</div>: <a href="https://drive.google.com/drive/folders/1YEJ93EkD0gVELH3lyvFbCHg5yyroZy_t?usp=drive_link">Download PDF</a></p><br /><br /><div>Regards,<br/>Carnivore Diet Representative</div>`,
             
         });
 
@@ -37,7 +37,8 @@ Here you can Download
       await prisma.emailLog.create({
   data: {
     email,
-    status: 'Delivered', // ✅ include status here
+    status: 'Delivered',
+    site:"bariatric" // ✅ include status here
   },
 });
 

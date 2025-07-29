@@ -62,7 +62,7 @@ export default function Home() {
                         <div className={`text-sm font-medium ${idx === currentIndex ? 'font-bold' : ''}`}>{item.label}</div>
                         <div className="w-full bg-gray-100 rounded-full h-2">
                             <div
-                                className={`h-2 rounded-full transition-all duration-200 ease-linear ${idx < currentIndex || (idx === currentIndex && progress >= 100) ? 'bg-green-500 w-full' : idx === currentIndex ? 'bg-rose-500' : ''}`}
+                                className={`h-2 rounded-full transition-all duration-200 ease-linear ${idx < currentIndex || (idx === currentIndex && progress >= 100) ? 'bg-green-500 w-full' : idx === currentIndex ? 'bg-green-500' : ''}`}
                                 style={{ width: idx === currentIndex ? `${Math.min(progress, 100)}%` : idx < currentIndex ? '100%' : '0%' }}
                             />
                         </div>

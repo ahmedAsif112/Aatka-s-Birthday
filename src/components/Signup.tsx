@@ -162,7 +162,7 @@ export default function SignupScreen() {
                     onClick={handleContinue}
                     disabled={validationStatus !== 'valid' || isValidating}
                     className={`w-full max-w-md mt-7 font-semibold text-lg py-3 rounded-full transition mb-6 ${validationStatus === 'valid' && !isValidating
-                        ? "bg-rose-500 hover:bg-rose-600 text-white"
+                        ? "bg-green-500 hover:bg-green-600 text-white"
                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                         }`}
                 >

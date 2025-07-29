@@ -67,7 +67,7 @@ export default function MeatPreference() {
                         <button
                             key={label}
                             className={`w-full text-left px-6 py-4 rounded-xl font-medium flex justify-between items-center ${isSelected(label)
-                                ? "bg-[#F43F5E] text-white"
+                                ? "bg-green-500 text-white"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}
                             onClick={() => toggleOption(label)}
@@ -94,7 +94,7 @@ export default function MeatPreference() {
                 </div>
 
                 <button
-                    className={`mt-6 px-10 py-3 rounded-full font-semibold text-white bg-rose-500 hover:bg-rose-600`}
+                    className={`mt-6 px-10 py-3 rounded-full font-semibold text-white bg-green-500 hover:bg-green-600`}
                     onClick={() => {
                         handleContinue();
                         handleSelect();

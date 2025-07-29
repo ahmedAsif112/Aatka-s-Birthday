@@ -186,7 +186,7 @@ const WeightProgressChart = () => {
                     {testimonials.map((_, i) => (
                         <div
                             key={i}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentTestimonial ? "bg-rose-500" : "bg-gray-300"}`}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentTestimonial ? "bg-green-500" : "bg-gray-300"}`}
                         />
                     ))}
                 </div>
@@ -196,7 +196,7 @@ const WeightProgressChart = () => {
                 <div className="sticky bottom-4 z-10 py-4">
                     <button
                         onClick={() => router.push("/halfwaythere")}
-                        className="mt-8 px-8 py-3 rounded-full bg-rose-500 text-white font-semibold hover:bg-rose-600 transition"
+                        className="mt-8 px-8 py-3 rounded-full bg-green-500 text-white font-semibold hover:bg-green-600 transition"
                     >
                         Continue
                     </button>

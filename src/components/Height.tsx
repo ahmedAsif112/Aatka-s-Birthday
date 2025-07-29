@@ -66,13 +66,13 @@ export default function Height() {
                 <div className="flex space-x-5 mb-8">
                     <button
                         onClick={() => setUnit('ft')}
-                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'ft' ? 'bg-rose-500 text-white' : 'text-black'}`}
+                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'ft' ? 'bg-green-500 text-white' : 'text-black'}`}
                     >
                         FT
                     </button>
                     <button
                         onClick={() => setUnit('cm')}
-                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'cm' ? 'bg-rose-500 text-white' : 'text-black'}`}
+                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'cm' ? 'bg-green-500 text-white' : 'text-black'}`}
                     >
                         CM
                     </button>
@@ -128,7 +128,7 @@ export default function Height() {
                         handleContinue();
                         handleSelect();
                     }}
-                    className="mt-16 px-10 py-4 bg-rose-500 text-white text-lg rounded-full hover:bg-rose-600 transition"
+                    className="mt-16 px-10 py-4 bg-green-500 text-white text-lg rounded-full hover:bg-green-600 transition"
                 >
                     Continue
                 </button>

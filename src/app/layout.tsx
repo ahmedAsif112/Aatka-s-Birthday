@@ -2,18 +2,17 @@
 import './globals.css';
 import { ConfigProvider } from 'antd';
 import { AnimatePresence } from "framer-motion";
+import Analytics from '@/components/Analytics'; // 👈 Add this line
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  // Trigger on route change
-
   return (
     <html lang="en">
       <body className="antialiased">
+        <Analytics /> {/* 👈 Inject the tracking script */}
         <ConfigProvider
           theme={{
             token: {

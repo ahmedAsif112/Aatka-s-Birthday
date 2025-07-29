@@ -137,7 +137,7 @@ export default function Profile() {
                         </p>
                     </div>
 
-                    <button onClick={handleSelect} className="mt-8 px-10 py-4 bg-rose-500 text-white text-lg rounded-full hover:bg-rose-600 transition">
+                    <button onClick={handleSelect} className="mt-8 px-10 py-4 bg-green-500 text-white text-lg rounded-full hover:bg-green-600 transition">
                         Continue
                     </button>
                 </div>

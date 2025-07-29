@@ -18,10 +18,11 @@ const Carnivoureisdelicious = () => {
             <div className="flex  items-center justify-center min-h-screen bg-gradient-to-b from-purple-600 to-purple-800 text-white text-center px-4">
                 <div className="max-w-md">
                     {/* Emoji Icon or replace with <img src="..." /> */}
-                    <div className="text-6xl mb-6">🥩</div>
+                    <div className="text-6xl mb-6">🤗
+                    </div>
 
                     {/* Heading */}
-                    <h1 className="text-3xl font-bold mb-4">Carnivore Diet is delicious!</h1>
+                    <h1 className="text-3xl font-bold mb-4">Bariatric And Gastric Guide !</h1>
 
                     {/* Subtext */}
                     <p className="text-[25px] font-medium">
@@ -32,7 +33,7 @@ const Carnivoureisdelicious = () => {
 
                     {/* Continue Button */}
                     <button
-                        className="mt-20 bg-red-500 hover:bg-red-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
+                        className="mt-20 bg-green-500 hover:bg-green-400 text-white font-semibold py-3 px-8 rounded-full transition duration-300"
                         onClick={handleSelect}
                     >
                         Continue

@@ -10,7 +10,7 @@ export default function CancelPage() {
 
             <button
                 onClick={() => router.push('/checkout')}
-                className="mt-4 px-6 py-2 bg-rose-500 hover:bg-rose-600 text-white font-medium rounded-lg shadow-md transition duration-200"
+                className="mt-4 px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg shadow-md transition duration-200"
             >
                 Go Back to Checkout
             </button>

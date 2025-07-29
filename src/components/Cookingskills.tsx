@@ -46,7 +46,7 @@ export default function Cookingskills() {
                             key={index}
                             onClick={() => handleSelect(index)}
                             className={`w-full flex items-center justify-between px-6 py-4  rounded-xl text-[14px] font-medium transition ${selectedIndex === index
-                                ? "bg-[#F43F5E] text-white"
+                                ? "bg-green-500 text-white"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}
                         >

@@ -82,7 +82,7 @@ export default function CalculatingPlans() {
                     <p className="font-semibold mb-2">Analyzing your profile</p>
                     <div className="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
                         <div
-                            className="absolute left-0 top-0 h-full bg-rose-600 rounded-full transition-[width] duration-300 ease-linear"
+                            className="absolute left-0 top-0 h-full bg-green-600 rounded-full transition-[width] duration-300 ease-linear"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
@@ -97,7 +97,7 @@ export default function CalculatingPlans() {
                             <label className="flex gap-3 items-start mb-6 cursor-pointer">
                                 <input
                                     type="checkbox"
-                                    className="accent-rose-500 w-5 h-5 mt-1"
+                                    className="accent-green-500 w-5 h-5 mt-1"
                                     checked={consent}
                                     onChange={() => setConsent(!consent)}
                                 />
@@ -111,8 +111,8 @@ export default function CalculatingPlans() {
                                 disabled={!consent}
                                 onClick={handleContinue}
                                 className={`w-full py-3 rounded-full text-lg font-semibold transition ${consent
-                                    ? "bg-rose-500 text-white hover:bg-rose-600"
-                                    : "bg-rose-200 text-white cursor-not-allowed"
+                                    ? "bg-green-500 text-white hover:bg-green-600"
+                                    : "bg-green-200 text-white cursor-not-allowed"
                                     }`}
                             >
                                 Continue

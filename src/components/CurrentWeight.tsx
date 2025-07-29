@@ -50,13 +50,13 @@ export default function CWeight() {
                 <div className="flex space-x-5 mb-8">
                     <button
                         onClick={() => setUnit('lbs')}
-                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'lbs' ? 'bg-rose-500 text-white' : 'text-black'}`}
+                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'lbs' ? 'bg-green-500 text-white' : 'text-black'}`}
                     >
                         lbs
                     </button>
                     <button
                         onClick={() => setUnit('kg')}
-                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'kg' ? 'bg-rose-500 text-white' : 'text-black'}`}
+                        className={`px-5 py-2 rounded-full text-sm font-medium ${unit === 'kg' ? 'bg-green-500 text-white' : 'text-black'}`}
                     >
                         kg
                     </button>
@@ -83,7 +83,7 @@ export default function CWeight() {
                         handleContinue();
                         handleSelect();
                     }}
-                    className="mt-16 px-10 py-4 bg-rose-500 text-white text-lg rounded-full hover:bg-rose-600 transition"
+                    className="mt-16 px-10 py-4 bg-green-500 text-white text-lg rounded-full hover:bg-green-600 transition"
                 >
                     Continue
                 </button>

@@ -27,10 +27,11 @@ export default function What_is_carnivoure() {
             <div className="min-h-screen flex flex-col items-center justify-start px-4 py-10 bg-white">
                 <div className="w-full md:w-[40%] flex flex-col items-center justify-center px-4">
                     <h1 className="text-3xl font-bold mb-2 text-center">
-                        Carnivore Diet is a <span className="text-yellow-500">high-protein, all-meat</span> diet for weight loss
+                        Its Guide For Pre and Post <span className="text-yellow-500">recovery From Bariatric Surgery</span> And
+                        Gastric Sleeves.
                     </h1>
                     <p className="text-center text-gray-600 mb-4">
-                        Switch from varied foods to an all-meat diet and lose 1–2 lbs per week
+                        You know some of the great rewards you reap by following this Proper Guide
                     </p>
 
                     <div className="relative w-full flex pt-5 justify-center">
@@ -40,7 +41,7 @@ export default function What_is_carnivoure() {
                         <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                     </div>
 
-                    <button onClick={handleSelect} className="mt-4 px-10 py-4 bg-rose-500 text-white text-lg rounded-full hover:bg-rose-600 transition">
+                    <button onClick={handleSelect} className="mt-4 px-10 py-4 bg-green-500 text-white text-lg rounded-full hover:bg-green-600 transition">
                         Continue
                     </button>
                 </div>

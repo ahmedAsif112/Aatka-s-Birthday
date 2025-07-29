@@ -37,7 +37,7 @@ export default function Familiar() {
         >
             <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 bg-white">
                 <h1 className="text-2xl md:text-3xl font-semibold text-center mb-6">
-                    How familiar are you with Carnivore Diet?
+                    How familiar are you with Bariatric & Gastric Pre/Post Plan?
                 </h1>
 
                 <div className="space-y-4 w-[40%] familiar">
@@ -46,7 +46,7 @@ export default function Familiar() {
                             key={index}
                             onClick={() => handleSelect(index)}
                             className={`w-full flex items-center justify-between px-6 py-4  rounded-xl text-[14px] font-medium transition ${selectedIndex === index
-                                ? "bg-[#F43F5E] text-white"
+                                ? "bg-green-500 text-white"
                                 : "bg-gray-100 hover:bg-gray-200"
                                 }`}
                         >

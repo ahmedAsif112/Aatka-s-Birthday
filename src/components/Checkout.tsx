@@ -7,7 +7,7 @@ import Image from 'next/image';
 const plans = [
     {
         id: '4w',
-        title: '4-week plan with 6+ free cookbooks',
+        title: '4-week plan with 16+ free cookbooks',
         newPrice: '$27.99',
     },
 ];
@@ -26,7 +26,7 @@ export default function PlanPage() {
     }, []);
 
     useEffect(() => {
-        const storedEmail = localStorage.getItem('email');
+        const storedEmail = localStorage.getItem('userEmail');
         const storedGender = localStorage.getItem('gender');
         if (storedEmail) setEmail(storedEmail);
         if (storedGender === 'Male' || storedGender === 'Female') setGender(storedGender);
@@ -78,8 +78,8 @@ export default function PlanPage() {
             </div>
 
             <div className="max-w-xl mx-auto px-4 pt-8">
-                <div className="bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-xl p-6 text-center mb-8">
-                    <div className="bg-purple-800 px-4 py-1 rounded-full inline-block mb-4 text-sm">
+                <div className="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-xl p-6 text-center mb-8">
+                    <div className="bg-green-800 px-4 py-1 rounded-full inline-block mb-4 text-sm">
                         {email || 'Loading email...'}
                     </div>
                     <h2 className="text-xl font-semibold mb-4">Your Personalized Plan is Ready</h2>
