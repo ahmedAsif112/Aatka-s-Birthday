@@ -52,7 +52,7 @@ export default function SuccessPage() {
                     </p>
 
                     <a
-                        href="https://drive.google.com/drive/folders/1qZuHN_ZwpYtGDvVnu8--xKddsKK_Ojb_?usp=drive_link"
+                        href="https://drive.google.com/drive/folders/1YEJ93EkD0gVELH3lyvFbCHg5yyroZy_t?usp=drive_link"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-teal-600 underline text-lg font-medium mb-6"

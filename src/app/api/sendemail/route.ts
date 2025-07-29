@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
-            subject: '30 Day Carnivore Diet Mealplan With 6 + Free Bonuses Cookbooks',
+            subject: '30 Day bariatric guide Mealplan With 16 + Free Bonuses Cookbooks',
             html: `<p>Hi , hope you are well<br /><br/>  <div>
 Here's your Customised Meal-Plan with 16+ free bariatric Cookbooks .
 Here you can Download 
