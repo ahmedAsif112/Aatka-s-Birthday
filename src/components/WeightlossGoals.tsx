@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 export default function WeightLossGoal() {
     const [unit, setUnit] = useState("LB");
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+    const [showRefundModal, setShowRefundModal] = useState(false);
+
     const router = useRouter();
 
     const goalsLB = [
@@ -83,6 +85,55 @@ export default function WeightLossGoal() {
                     ))}
 
                 </div>
+                <div className="mt-9 flex items-center justify-center">
+
+
+                    <button
+                        type="button"
+                        className="text-gray-400 text-base underline hover:text-gray-500 transition font-medium"
+                        onClick={() => setShowRefundModal(true)}
+                    >
+                        Refunds Policy
+                    </button>
+
+
+
+                </div>
+                {showRefundModal && (
+                    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+                        <div className="bg-white max-w-2xl w-[90%] p-6 rounded-2xl shadow-xl relative max-h-[90vh] overflow-y-auto">
+                            <button
+                                className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800"
+                                onClick={() => setShowRefundModal(false)}
+                            >
+                                ×
+                            </button>
+                            <h2 className="text-2xl font-bold mb-4 text-center">Refunds Policy for Digital Products</h2>
+                            <p className="text-sm mb-4">
+                                Due to the nature of digital products, <strong>all sales are final.</strong> Once a purchase is made,
+                                you will receive instant access to the eBooks and resources.
+                            </p>
+                            <p className="text-sm mb-4">As such, we do not offer refunds, returns, or exchanges for any reason, including but not limited to:</p>
+                            <ul className="list-disc list-inside text-sm mb-4 space-y-1">
+                                <li>Accidental purchases</li>
+                                <li>Compatibility issues</li>
+                                <li>Personal dissatisfaction</li>
+                                <li>Change of mind</li>
+                            </ul>
+                            <p className="text-sm mb-4">
+                                We encourage you to review the product descriptions carefully before making a purchase.
+                            </p>
+                            <h3 className="font-semibold text-md mb-2">Need Help?</h3>
+                            <p className="text-sm">
+                                If you experience any issues accessing your product or have questions before purchasing, feel free to reach out to us at:
+                                <br />
+                                <a href="mailto:carnivorerepresentatives@gmail.com" className="text-rose-600 underline">
+                                    carnivorerepresentatives@gmail.com
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
         </motion.div>
     );
