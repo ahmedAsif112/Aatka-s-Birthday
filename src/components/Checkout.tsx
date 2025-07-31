@@ -17,6 +17,8 @@ export default function PlanPage() {
     const [timeLeft, setTimeLeft] = useState(10 * 60);
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState<'Male' | 'Female' | ''>('');
+    const [acceptedRefundPolicy, setAcceptedRefundPolicy] = useState(false);
+    const [showRefundModal, setShowRefundModal] = useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -130,11 +132,71 @@ export default function PlanPage() {
 
                 <button
                     onClick={handleCheckout}
-                    className="mt-10 w-full bg-gradient-to-r from-pink-500 to-orange-400 hover:opacity-90 text-white font-semibold py-3 rounded-full transition"
+                    disabled={!acceptedRefundPolicy}
+                    className={`mt-10 w-full font-semibold py-3 rounded-full transition 
+      ${acceptedRefundPolicy
+                            ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white hover:opacity-90'
+                            : 'bg-gray-300 text-white cursor-not-allowed'}
+    `}
                 >
                     Get my plan
                 </button>
             </div>
+            <div className="mt-6">
+                <label className="flex items-center justify-center gap-3 cursor-pointer text-sm text-gray-700">
+                    <input
+                        type="checkbox"
+                        className="accent-pink-500 mt-1"
+                        checked={acceptedRefundPolicy}
+                        onChange={() => setAcceptedRefundPolicy(!acceptedRefundPolicy)}
+                    />
+                    <span>
+                        I agree to the&nbsp;
+                        <button
+                            type="button"
+                            className="underline text-rose-600"
+                            onClick={() => setShowRefundModal(true)}
+                        >
+                            Refunds Policy
+                        </button>
+                    </span>
+                </label>
+            </div>
+            {showRefundModal && (
+                <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+                    <div className="bg-white max-w-2xl w-[90%] p-6 rounded-2xl shadow-xl relative max-h-[90vh] overflow-y-auto">
+                        <button
+                            className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800"
+                            onClick={() => setShowRefundModal(false)}
+                        >
+                            ×
+                        </button>
+                        <h2 className="text-2xl font-bold mb-4 text-center">Refunds Policy for Digital Products</h2>
+                        <p className="text-sm mb-4">
+                            Due to the nature of digital products, <strong>all sales are final.</strong> Once a purchase is made,
+                            you will receive instant access to the eBooks and resources.
+                        </p>
+                        <p className="text-sm mb-4">As such, we do not offer refunds, returns, or exchanges for any reason, including but not limited to:</p>
+                        <ul className="list-disc list-inside text-sm mb-4 space-y-1">
+                            <li>Accidental purchases</li>
+                            <li>Compatibility issues</li>
+                            <li>Personal dissatisfaction</li>
+                            <li>Change of mind</li>
+                        </ul>
+                        <p className="text-sm mb-4">
+                            We encourage you to review the product descriptions carefully before making a purchase.
+                        </p>
+                        <h3 className="font-semibold text-md mb-2">Need Help?</h3>
+                        <p className="text-sm">
+                            If you experience any issues accessing your product or have questions before purchasing, feel free to reach out to us at:
+                            <br />
+                            <a href="mailto:carnivorerepresentatives@gmail.com" className="text-rose-600 underline">
+                                carnivorerepresentatives@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
