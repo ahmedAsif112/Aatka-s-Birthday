@@ -92,7 +92,7 @@ export default function SignupScreen() {
             localStorage.setItem("userEmail", email);
         }
 
-        router.push("/almostdone");
+        router.push("/checkout");
     };
 
     const getInputBorderClass = () => {

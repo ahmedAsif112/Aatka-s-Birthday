@@ -24,7 +24,7 @@ export default function Qualitysleep() {
 
     const handleSelect = (index: number) => {
         setSelectedIndex(index);
-        router.push("/signup");
+        router.push("/almostdone");
     };
 
     return (
