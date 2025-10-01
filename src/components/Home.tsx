@@ -1,874 +1,910 @@
 "use client";
-
-import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
-import { Menu, X, Heart, Activity, Target, Shield, Users, CheckCircle, Star, ArrowRight, Download, Play, Zap, Sparkles, Mail } from 'lucide-react';
-import bowl from "@/assets/Bowl.png"
-import egg from "@/assets/egg.png"
-import lunch from "@/assets/lunch.png"
+import React, { useState, useEffect } from 'react';
+import { Activity, Crown, Shield, Target, CheckCircle, Star, Users, TrendingUp, Award, Heart, Mail, Gift, User, Phone } from 'lucide-react';
+import collage from "@/assets/collagehero.png"
+import girl from "@/assets/Hero.png"
 import about from "@/assets/about.png"
-import hero from "@/assets/Hero.png"
-import { useRouter } from "next/navigation";
 import Image from 'next/image';
-const BariatricMealPlan = () => {
-    const [isVisible, setIsVisible] = useState({});
+import { useRouter } from "next/navigation";
+
+const BariatricFunnelPage = () => {
+    const [isVisible, setIsVisible] = useState(false);
     const [scrollY, setScrollY] = useState(0);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-    const [activeSection, setActiveSection] = useState('home');
+    const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+    // Form states
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '' });
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [formErrors, setFormErrors] = useState({ name: '', email: '' });
+    const [animatedCards, setAnimatedCards] = useState([false, false, false, false, false, false]);
     const router = useRouter();
 
-    // Throttled scroll handler
-    const handleScroll = useCallback(() => {
-        const y = window.scrollY;
-        if (Math.abs(y - scrollY) > 5) {
-            setScrollY(y);
-            setScrolled(y > 20);
-        }
-    }, [scrollY]);
-
     useEffect(() => {
-        let ticking = false;
-        const scrollHandler = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    handleScroll();
-                    ticking = false;
+        setIsVisible(true);
+
+        const handleScroll = () => setScrollY(window.scrollY);
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        const interval = setInterval(() => {
+            setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+        }, 4000);
+
+        const delays = [500, 700, 900, 1100, 1300, 1500];
+        delays.forEach((delay, index) => {
+            setTimeout(() => {
+                setAnimatedCards((prev) => {
+                    const newState = [...prev];
+                    newState[index] = true;
+                    return newState;
                 });
-                ticking = true;
-            }
+            }, delay);
+        });
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            clearInterval(interval);
         };
+    }, []);
 
-        window.addEventListener('scroll', scrollHandler, { passive: true });
-        setIsLoaded(true);
-
-        return () => window.removeEventListener('scroll', scrollHandler);
-    }, [handleScroll]);
-
-    // Optimize intersection observer
-    useEffect(() => {
-        if (!isLoaded) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const updates = {};
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const updates: Record<string, boolean> = {};
-                        updates[entry.target.id] = true;
-                    }
-                });
-
-                if (Object.keys(updates).length > 0) {
-                    setIsVisible((prev) => ({ ...prev, ...updates }));
-                }
-            },
-            {
-                threshold: 0.1,
-                rootMargin: "50px",
-            }
-        );
-
-        const elements = document.querySelectorAll("[data-animate]");
-        elements.forEach((el) => observer.observe(el));
-
-        return () => observer.disconnect();
-    }, [isLoaded]);
-
-    const features = useMemo(() => [
-        {
-            icon: <Target className="w-8 h-8" />,
-            title: "Personalized Plans",
-            description: "Custom meal plans tailored to your specific bariatric surgery type and recovery stage.",
-            color: "from-emerald-400 to-teal-500"
-        },
-        {
-            icon: <Shield className="w-8 h-8" />,
-            title: "Medical Compliance",
-            description: "All plans are designed with bariatric guidelines and approved by certified nutritionists.",
-            color: "from-blue-400 to-indigo-500"
-        },
-        {
-            icon: <Activity className="w-8 h-8" />,
-            title: "Progress Tracking",
-            description: "Monitor your nutritional intake, weight loss, and health improvements with our tools.",
-            color: "from-purple-400 to-pink-500"
-        }
-    ], []);
-
-    const testimonials = useMemo(() => [
+    const testimonials = [
         {
             name: "Sarah Mitchell",
-            text: "This meal plan made my post-surgery journey so much easier. I've lost 85 lbs safely and feel amazing!",
+            result: "Lost 85lbs safely",
+            text: "This meal plan made my post-surgery journey so much easier. I feel amazing and healthier than ever!",
             rating: 5,
-            surgery: "Gastric Sleeve",
-            timeframe: "8 months post-op"
+            surgery: "Gastric Sleeve"
         },
         {
             name: "Michael Rodriguez",
-            text: "The portion control and nutrition guidance helped me avoid complications. Highly recommended!",
+            result: "Avoided complications",
+            text: "The portion control and nutrition guidance helped me stay on track. Highly recommended for all bariatric patients!",
             rating: 5,
-            surgery: "Gastric Bypass",
-            timeframe: "1 year post-op"
+            surgery: "Gastric Bypass"
         },
         {
             name: "Jennifer Adams",
-            text: "Finally, a meal plan that understands bariatric needs. The recipes are delicious and filling.",
+            result: "Energy levels doubled",
+            text: "Finally, a meal plan that understands bariatric needs. The recipes are delicious and perfectly portioned.",
             rating: 5,
-            surgery: "Lap Band",
-            timeframe: "6 months post-op"
+            surgery: "Lap Band"
         }
-    ], []);
+    ];
 
-    const mealTypes = useMemo(() => [
-        {
-            name: "Protein-Rich Breakfast",
-            image: egg,
-            calories: "200-300",
-            protein: "25-30g",
-            phase: "All Phases"
-        },
-        {
-            name: "Soft Foods Lunch",
-            image: lunch,
-            calories: "250-350",
-            protein: "20-25g",
-            phase: "Phase 3+"
-        },
-        {
-            name: "Nutrient-Dense Dinner",
-            image: bowl,
-            calories: "300-400",
-            protein: "30-35g",
-            phase: "Phase 4+"
+    const validateField = (name, value) => {
+        let error = '';
+
+        if (name === 'name') {
+            if (!value || value.trim().length === 0) {
+                error = 'Please enter your full name!';
+            } else if (value.trim().length < 2) {
+                error = 'Name must be at least 2 characters long!';
+            } else if (!/^[a-zA-Z\s]+$/.test(value.trim())) {
+                error = 'Name should only contain letters and spaces!';
+            }
         }
-    ], []);
 
-    const stats = useMemo(() => [
-        { number: "10K+", label: "Success Stories", icon: <Users className="w-6 h-6" /> },
-        { number: "500+", label: "Approved Recipes", icon: <Heart className="w-6 h-6" /> },
-        { number: "95%", label: "Success Rate", icon: <Target className="w-6 h-6" /> },
-        { number: "24/7", label: "Nutritionist Support", icon: <Shield className="w-6 h-6" /> }
-    ], []);
+        if (name === 'email') {
+            if (!value || value.trim().length === 0) {
+                error = 'Please enter your email address!';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                error = 'Please enter a valid email address!';
+            }
+        }
 
-    const backgroundTransforms = useMemo(() => ({
-        first: { transform: `translateY(${scrollY * 0.1}px)` },
-        second: { transform: `translateY(${scrollY * 0.15}px)` },
-        third: { transform: `translateY(${scrollY * -0.1}px)` }
-    }), [scrollY]);
+        return error;
+    };
 
-    const menuItems = ['Home', 'About', 'Plans', 'Success Stories', 'Contact'];
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        const trimmedValue = value.trim();
 
-    if (!isLoaded) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg animate-pulse mb-4 mx-auto">
-                        <Activity className="w-8 h-8 text-white" />
-                    </div>
-                    <p className="text-xl font-semibold text-gray-600">Loading Your Transformation...</p>
-                </div>
-            </div>
-        );
-    }
+        setFormData(prev => ({ ...prev, [name]: value }));
+
+        const error = validateField(name, trimmedValue);
+        setFormErrors(prev => ({ ...prev, [name]: error }));
+
+        const updatedFormData = { ...formData, [name]: value };
+        const nameError = name === 'name' ? error : validateField('name', updatedFormData.name);
+        const emailError = name === 'email' ? error : validateField('email', updatedFormData.email);
+
+        const hasErrors = nameError || emailError;
+        const hasAllFields = updatedFormData.name.trim() && updatedFormData.email.trim();
+
+        setIsFormValid(hasAllFields && !hasErrors);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const nameError = validateField('name', formData.name);
+        const emailError = validateField('email', formData.email);
+
+        if (nameError || emailError) {
+            setFormErrors({ name: nameError, email: emailError });
+            return;
+        }
+
+        try {
+            // Save to localStorage with your exact keys
+            localStorage.setItem('name', formData.name.trim());
+            localStorage.setItem('userEmail', formData.email.trim());
+
+            setFormSubmitted(true);
+            console.log("Form submitted:", {
+                name: formData.name.trim(),
+                email: formData.email.trim()
+            });
+        } catch (error) {
+            console.log("Form submission failed:", error);
+        }
+    };
+
+    const handleContinueToSurvey = () => {
+        router.push("/step1");
+
+    };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 overflow-x-hidden">
-            {/* Floating Background Elements */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div
-                    className="absolute top-20 right-10 w-32 h-32 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-full opacity-20 blur-xl will-change-transform"
-                    style={backgroundTransforms.first}
-                />
-                <div
-                    className="absolute top-40 left-10 w-24 h-24 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-full opacity-30 blur-lg will-change-transform"
-                    style={backgroundTransforms.second}
-                />
-                <div
-                    className="absolute bottom-40 right-20 w-40 h-40 bg-gradient-to-r from-teal-200 to-emerald-200 rounded-full opacity-15 blur-2xl will-change-transform"
-                    style={backgroundTransforms.third}
-                />
+        <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-teal-50 to-blue-50 overflow-hidden">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-20 right-10 w-32 h-32 bg-gradient-to-r from-teal-200/30 to-cyan-200/30 rounded-full opacity-60 blur-xl animate-pulse" />
+                <div className="absolute bottom-40 left-10 w-24 h-24 bg-gradient-to-r from-cyan-200/40 to-teal-200/40 rounded-full opacity-40 blur-lg animate-bounce" />
             </div>
 
-            {/* Enhanced Navigation Header */}
-            <div className="fixed top-0 left-0 w-full h-32 overflow-hidden pointer-events-none z-40">
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-emerald-200/30 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -top-5 right-1/4 w-32 h-32 bg-teal-200/20 rounded-full blur-2xl animate-bounce" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
-                <div className="absolute top-0 right-10 w-24 h-24 bg-blue-200/25 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-            </div>
-
-            <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ease-out ${scrolled
-                ? 'bg-white/95 backdrop-blur-2xl shadow-2xl shadow-emerald-500/10 border-b border-emerald-200/50'
-                : 'bg-white/80 backdrop-blur-xl border-b border-emerald-100/30'
-                }`}>
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-teal-400 via-blue-400 to-emerald-400 bg-size-200 animate-gradient"></div>
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-20">
-                        {/* Logo Section */}
-                        <div className="flex items-center space-x-4 group cursor-pointer relative">
-                            <div className="absolute -top-2 -left-2 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
+            <div className="relative z-10">
+                {/* Header */}
+                <header className="px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="max-w-7xl mx-auto flex justify-between items-center">
+                        <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl border border-teal-300/30">
+                                <Activity className="w-6 h-6 text-white" />
                             </div>
-                            <div className="absolute -bottom-2 -right-2 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                                <Zap className="w-3 h-3 text-teal-400 animate-spin" style={{ animationDuration: '3s' }} />
+                            <div>
+                                <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                                    BariatricPlan
+                                </h1>
+                                <p className="text-xs text-gray-500 -mt-1">Your transformation partner</p>
+                            </div>
+                        </div>
+                        <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-600">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                            <span>Trusted by 10,000+ Patients</span>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Hero Section */}
+                <section className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-20">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-7 items-center">
+                            {/* Content */}
+                            <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                                <div className="mb-6">
+                                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-teal-100 text-teal-700 font-semibold text-sm border border-teal-200 backdrop-blur-sm">
+                                        <Crown className="w-4 h-4 mr-2" />
+                                        Trusted by 10,000+ Patients
+                                    </span>
+                                </div>
+
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                                    <span className="text-gray-800">Transform Your Life with</span>
+                                    <br />
+                                    <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+                                        Bariatric Meal Plans
+                                    </span>
+                                </h1>
+
+                                <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
+                                    Medically-approved nutrition for gastric sleeve, bypass & lap band patients. Achieve sustainable weight loss safely with our proven system.
+                                </p>
+
+                                {/* Trust Indicators */}
+                                <div className="flex flex-wrap gap-6 mb-6 text-sm text-gray-600">
+                                    <div className="flex items-center space-x-2">
+                                        <CheckCircle className="w-4 h-4 text-teal-500" />
+                                        <span>Nutritionist Approved</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <CheckCircle className="w-4 h-4 text-teal-500" />
+                                        <span>Post-Surgery Safe</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <CheckCircle className="w-4 h-4 text-teal-500" />
+                                        <span>Proven Results</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Hero Visual */}
+                            <div className={`relative transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                                <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-teal-100">
+                                    {/* Main Visual */}
+                                    <div className="relative mb-8">
+                                        <div className="w-full h-64 sm:h-80 bg-white rounded-2xl shadow-2xl flex items-center justify-center">
+                                            <Image
+                                                src={collage}
+                                                alt="Premium ribeye steak"
+                                                className="w-full h-64 p-4 sm:h-80 object-cover rounded-2xl shadow-2xl"
+                                            />
+                                        </div>
+
+                                        {/* Floating Quality Badges */}
+                                        <div className="absolute -top-3 -right-3 bg-white p-3 rounded-xl shadow-lg animate-pulse border border-teal-200">
+                                            <div className="text-center">
+                                                <div className="text-lg font-bold text-teal-600">A+</div>
+                                                <div className="text-xs text-gray-600">Grade</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute -bottom-3 -left-3 bg-white p-3 rounded-xl shadow-lg animate-bounce border border-cyan-200">
+                                            <div className="text-center">
+                                                <div className="text-lg font-bold text-cyan-600">100%</div>
+                                                <div className="text-xs text-gray-600">Safe</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-center space-y-6">
+                                        <div className="flex justify-center items-center space-x-4 mb-4">
+                                            <Gift className="text-3xl text-yellow-500 animate-bounce" />
+                                            <h2 className="text-teal-600 text-2xl font-bold">FREE BONUS!</h2>
+                                            <Gift
+                                                className="text-3xl text-yellow-500 animate-bounce"
+                                                style={{ animationDelay: "0.5s" }}
+                                            />
+                                        </div>
+
+                                        <p className="text-gray-600 text-base font-light">
+                                            Complete our quick survey and get
+                                        </p>
+
+                                        <h1 className="text-teal-600 text-3xl lg:text-4xl font-bold animate-pulse">
+                                            6+ FREE BARIATRIC GUIDES
+                                        </h1>
+
+                                        {/* Green Ribbon */}
+                                        <div className="flex justify-center">
+                                            <div className="relative inline-block">
+                                                <div className="bg-teal-600 text-white font-bold px-6 py-2 rounded-sm relative z-10">
+                                                    Worth $197 - Yours absolutely free!
+                                                </div>
+                                                <div className="absolute left-0 top-1/2 -translate-y-1/2 -ml-3 w-3 h-0 border-t-[20px] border-b-[20px] border-r-[12px] border-r-teal-700 border-t-transparent border-b-transparent"></div>
+                                                <div className="absolute right-0 top-1/2 -translate-y-1/2 -mr-3 w-3 h-0 border-t-[20px] border-b-[20px] border-l-[12px] border-l-teal-700 border-t-transparent border-b-transparent"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Form Section */}
+                <section className="px-4 sm:px-6 lg:px-8 py-7 bg-gradient-to-r from-teal-500 to-cyan-500 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-white/10" />
+                    <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full animate-pulse" />
+                    <div className="absolute bottom-10 left-10 w-24 h-24 bg-white/10 rounded-full animate-bounce" />
+                    <div className="max-w-lg mx-auto relative z-10">
+                        <div className="bg-white/95 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6">
+                            {!formSubmitted ? (
+                                <div>
+                                    <div className="text-center mb-6">
+                                        <div className="w-14 h-14 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse">
+                                            <Gift className="w-5 h-5 text-white" />
+                                        </div>
+                                        <h3 className="text-gray-800 text-xl font-medium mb-2">
+                                            Get Your FREE Guides Now!
+                                        </h3>
+                                        <p className="text-gray-600 font-light">
+                                            Enter your details to start your transformation
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                        <div>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                    <User className="h-4 w-4 text-gray-400" />
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter your full name"
+                                                    className={`w-full h-12 pl-12 pr-4 border rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-300 ${formErrors.name ? 'border-red-500' : 'border-gray-200 hover:border-teal-300'
+                                                        }`}
+                                                />
+                                            </div>
+                                            {formErrors.name && (
+                                                <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                    <Mail className="h-4 w-4 text-gray-400" />
+                                                </div>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter your email address"
+                                                    className={`w-full h-12 pl-12 pr-4 border rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-300 ${formErrors.email ? 'border-red-500' : 'border-gray-200 hover:border-teal-300'
+                                                        }`}
+                                                />
+                                            </div>
+                                            {formErrors.email && (
+                                                <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={!isFormValid}
+                                            className="w-full h-12 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 animate-blinkJump"
+                                        >
+                                            Get My FREE Guides & Start Journey!
+                                        </button>
+                                    </form>
+
+                                    <div className="mt-4 text-center">
+                                        <p className="text-gray-500 text-sm font-light">
+                                            100% secure • No spam
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="w-18 h-18 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center animate-bounce">
+                                        <CheckCircle className="w-7 h-7 text-green-500" />
+                                    </div>
+                                    <h3 className="text-green-600 text-xl font-medium mb-4">
+                                        Welcome {formData.name}!
+                                    </h3>
+                                    <p className="text-gray-600 mb-6 font-light">
+                                        Your free guides are waiting... Answer a few quick questions
+                                    </p>
+                                    <button
+                                        onClick={handleContinueToSurvey}
+                                        className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 h-11 rounded-xl font-medium hover:shadow-lg transition-all duration-300"
+                                    >
+                                        Continue to Survey
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Stats Section */}
+                <section className="px-4 sm:px-6 lg:px-8 py-8 bg-white">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                            {[
+                                { number: "10,000+", label: "Success Stories", icon: <Users className="w-6 h-6" /> },
+                                { number: "95%", label: "Success Rate", icon: <TrendingUp className="w-6 h-6" /> },
+                                { number: "30", label: "Day Results", icon: <Target className="w-6 h-6" /> },
+                                { number: "24/7", label: "Expert Support", icon: <Award className="w-6 h-6" /> }
+                            ].map((stat, index) => (
+                                <div key={index} className="text-center group">
+                                    <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-2xl p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+                                        <div className="text-2xl text-teal-500 mb-2 group-hover:scale-110 transition-transform duration-300 flex justify-center">
+                                            {stat.icon}
+                                        </div>
+                                        <h3 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">{stat.number}</h3>
+                                        <p className="text-gray-600 font-medium text-sm">{stat.label}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Science Section */}
+                <section className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-teal-50 to-cyan-50">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-12 items-center">
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+                                        The Science of <span className="text-teal-600">Bariatric</span>
+                                        <br />
+                                        <span className="text-cyan-600">Excellence</span>
+                                    </h2>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="bg-white p-6 rounded-2xl border border-teal-100 shadow-md">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <Target className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-gray-800 mb-2">Phase-Based Nutrition</h3>
+                                                <p className="text-gray-600 leading-relaxed">
+                                                    Carefully structured meal plans that progress with your recovery, from clear liquids to solid foods, ensuring optimal healing.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-2xl border border-teal-100 shadow-md">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <Shield className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-gray-800 mb-2">Protein-First Approach</h3>
+                                                <p className="text-gray-600 leading-relaxed">
+                                                    Every meal prioritizes high-quality protein to support healing, muscle preservation, and optimal weight loss outcomes.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-2xl border border-teal-100 shadow-md">
+                                        <div className="flex items-start space-x-4">
+                                            <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <Activity className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-gray-800 mb-2">Medical Compliance</h3>
+                                                <p className="text-gray-600 leading-relaxed">
+                                                    All plans designed with bariatric guidelines and approved by certified nutritionists for your safety and success.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="relative">
-                                <div className="absolute inset-0 w-14 h-14 bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400 rounded-full opacity-0 group-hover:opacity-30 scale-75 group-hover:scale-110 transition-all duration-500 blur-sm"></div>
-                                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-teal-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-emerald-500/40 group-hover:shadow-3xl group-hover:shadow-emerald-500/60 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                    <Activity className="w-6 h-6 text-white relative z-10" />
-                                </div>
-                            </div>
+                                <div className="relative bg-white rounded-3xl p-8 shadow-xl border border-teal-100">
+                                    <div className="relative mb-8">
+                                        <div className="w-full h-80 bg-gradient-to-br from-teal-400 to-cyan-400 rounded-2xl shadow-2xl flex items-center justify-center">
+                                            <Image
+                                                src={girl}
+                                                alt="Premium cuts of meat"
+                                                className="w-full h-80 object-cover rounded-2xl shadow-2xl"
+                                            />                                        </div>
 
-                            <div className="flex flex-col">
-                                <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600 bg-clip-text text-transparent group-hover:from-emerald-600 group-hover:via-teal-600 group-hover:to-blue-700 transition-all duration-500">
-                                    BariatricPlan
-                                </h1>
-                                <p className="text-xs text-gray-500 group-hover:text-emerald-500 transition-colors duration-300 -mt-1">Your transformation partner</p>
-                            </div>
-                        </div>
-
-                        {/* Desktop Menu */}
-                        <div className="hidden lg:flex items-center space-x-8">
-                            {menuItems.map((item, index) => (
-                                <a
-                                    key={item}
-                                    href={`#${item.toLowerCase().replace(' ', '-')}`}
-                                    className="cursor-pointer relative text-gray-700 hover:text-emerald-600 transition-all duration-400 font-medium group px-3 py-2"
-                                    style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                    <span className="relative z-10">{item}</span>
-                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-400 group-hover:w-full rounded-full"></span>
-                                    <span className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10"></span>
-                                    <Heart className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-3 h-3 text-emerald-400 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-500" />
-                                </a>
-                            ))}
-                        </div>
-
-                        {/* CTA Button */}
-                        <div className="flex items-center space-x-4">
-                            <button onClick={() => router.push("/weightloss")} className="hidden sm:flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500 text-white font-semibold rounded-full shadow-2xl shadow-emerald-500/40 hover:shadow-3xl hover:shadow-emerald-500/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-500 relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                                <Target className="w-5 h-5 relative z-10 group-hover:animate-pulse" />
-                                <span className="relative z-10">Start Your Journey</span>
-                            </button>
-
-                            <button
-                                className="lg:hidden p-3 rounded-xl bg-gradient-to-r from-emerald-100 to-teal-100 hover:from-emerald-200 hover:to-teal-200 transition-all duration-300 hover:scale-110"
-                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            >
-                                {mobileMenuOpen ? (
-                                    <X className="w-6 h-6 text-emerald-600" />
-                                ) : (
-                                    <Menu className="w-6 h-6 text-emerald-600" />
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Mobile Menu */}
-                <div className={`lg:hidden overflow-hidden transition-all duration-500 ${mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                    }`}>
-                    <div className="bg-white/95 backdrop-blur-xl border-t border-emerald-200/50 shadow-inner">
-                        <div className="px-6 py-6 space-y-4">
-                            {menuItems.map((item, index) => (
-                                <a
-                                    key={item}
-                                    href={`#${item.toLowerCase().replace(' ', '-')}`}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="cursor-pointer block text-gray-700 hover:text-emerald-600 transition-all duration-300 font-medium py-3 px-4 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:scale-105 transform"
-                                    style={{
-                                        animationDelay: `${index * 100}ms`,
-                                        animation: mobileMenuOpen ? "slideInUp 0.5s ease-out forwards" : "",
-                                    }}
-                                >
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"></div>
-                                        <span>{item}</span>
+                                        <div className="absolute -top-4 -right-4 bg-white p-4 rounded-xl shadow-xl border border-teal-200">
+                                            <div className="text-center">
+                                                <div className="text-2xl font-bold text-teal-600">95%</div>
+                                                <div className="text-xs text-gray-600">Success Rate</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </a>
-                            ))}
 
-                            <button className="w-full mt-4 flex items-center justify-center space-x-2 px-6 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <Target className="w-5 h-5 relative z-10" />
-                                <span className="relative z-10">Start Your Journey</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero Section */}
-            <section id="home" className="flex items-center pt-24 pb-12 relative z-10 min-h-[95vh] lg:min-h-screen">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-                        <div className="flex flex-col gap-4 text-center lg:text-left order-2 lg:order-1">
-                            <div className="mb-4">
-                                <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-600 font-semibold text-sm animate-pulse">
-                                    Trusted by 10,000+ Patients
-                                </span>
-                            </div>
-
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-5 leading-tight">
-                                <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                                    Transform Your Life with
-                                </span>
-                                <br />
-                                <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
-                                    Bariatric Meal Plans
-                                </span>
-                            </h1>
-
-                            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                                Medically-approved nutrition for gastric sleeve, bypass & lap band patients.
-                                Achieve sustainable weight loss safely.
-                            </p>
-
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-6">
-                                <button onClick={() => router.push("/weightloss")} className="flex items-center justify-center space-x-2 h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                                    <Play className="w-5 h-5" />
-                                    <span>Get My Custom Plan</span>
-                                </button>
-                                <button onClick={() => router.push("/signup")} className="flex items-center justify-center space-x-2 h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold border-2 border-emerald-300 text-emerald-600 hover:bg-emerald-50 transform hover:scale-105 transition-all duration-300 rounded-full">
-                                    <Download className="w-5 h-5" />
-                                    <span>Download Guide</span>
-                                </button>
-                            </div>
-
-                            {/* Trust Indicators */}
-                            <div className="mb-5 flex flex-wrap justify-center lg:justify-start gap-4 lg:gap-6 text-sm text-gray-500">
-                                <div className="flex items-center space-x-2">
-                                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                    <span>Nutritionist Approved</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                    <span>Post-Surgery Safe</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                    <span>Proven Results</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="relative max-w-sm sm:max-w-md lg:max-w-lg mx-auto order-1 lg:order-2">
-                            {/* Main Hero Image */}
-                            <div className="relative group">
-                                <div className="w-full h-72 sm:h-96 lg:h-[420px] bg-gradient-to-br from-emerald-400 to-teal-500 rounded-3xl shadow-2xl transform group-hover:scale-105 transition-all duration-500 flex items-center justify-center relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20"></div>
-                                    <Image
-                                        src={hero}
-                                        alt="Healthy bariatric meal preparation"
-                                        className="w-full h-full object-cover rounded-3xl"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
-                                </div>
-
-                                {/* Enhanced Floating Elements */}
-                                <div className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-2xl animate-bounce border-2 border-emerald-100 hover:shadow-3xl transition-shadow duration-300" style={{ animationDelay: '0.5s' }}>
-                                    <Activity className="w-6 h-6 text-emerald-500" />
-                                </div>
-                                <div className="absolute -bottom-4 -left-4 bg-white p-4 rounded-2xl shadow-2xl animate-bounce border-2 border-teal-100 hover:shadow-3xl transition-shadow duration-300" style={{ animationDelay: '1s' }}>
-                                    <Target className="w-6 h-6 text-teal-500" />
-                                </div>
-                                <div className="absolute top-1/2 -left-6 bg-white p-3 rounded-xl shadow-xl animate-pulse border-2 border-emerald-100 hover:shadow-2xl transition-shadow duration-300" style={{ animationDelay: '1.5s' }}>
-                                    <Heart className="w-5 h-5 text-emerald-500" />
-                                </div>
-                                <div className="hidden lg:block absolute top-16 -right-8 bg-white p-3 rounded-xl shadow-xl animate-pulse border-2 border-blue-100 hover:shadow-2xl transition-shadow duration-300" style={{ animationDelay: '2s' }}>
-                                    <Shield className="w-5 h-5 text-blue-500" />
-                                </div>
-                                <div className="hidden sm:block absolute bottom-16 -right-6 bg-white p-2 rounded-lg shadow-lg animate-bounce border border-purple-100" style={{ animationDelay: '2.5s' }}>
-                                    <Users className="w-4 h-4 text-purple-500" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="py-16 bg-white relative z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-8">
-                        {stats.map((stat, index) => (
-                            <div key={index} className="text-center">
-                                <div className="bg-gradient-to-br from-white to-emerald-50 border-0 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 p-6 rounded-2xl">
-                                    <div className="text-3xl text-emerald-500 mb-2 flex justify-center">{stat.icon}</div>
-                                    <h3 className="text-3xl font-bold text-gray-800 mb-1">{stat.number}</h3>
-                                    <p className="text-gray-600 font-medium">{stat.label}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="py-20 bg-gradient-to-br from-emerald-50 to-teal-50 relative z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16" data-animate id="features-header">
-                        <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
-                            Why Choose <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">BariatricPlan</span>
-                        </h2>
-                        <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-                            Comprehensive nutrition support designed specifically for bariatric surgery patients at every stage of recovery
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3 md:grid-cols-1 gap-8">
-                        {features.map((feature, index) => (
-                            <div
-                                key={index}
-                                className="text-center bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-4 transition-all duration-500 group"
-                            >
-                                <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg text-white`}>
-                                    {feature.icon}
-                                </div>
-                                <h3 className="text-gray-800 mb-4 text-xl sm:text-2xl font-bold">{feature.title}</h3>
-                                <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Meal Plans Section */}
-            <section id="plans" className="py-20 bg-white relative z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16" data-animate id="plans-header">
-                        <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
-                            Sample <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">Meal Plans</span>
-                        </h2>
-                        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-                            Carefully crafted meals that meet your nutritional needs at every recovery phase
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
-                        {mealTypes.map((meal, index) => (
-                            <div
-                                key={index}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 group"
-                            >
-                                <div className="relative overflow-hidden">
-                                    {typeof meal.image === "string" ? (
-                                        <img
-                                            src={meal.image}
-                                            alt={meal.name}
-                                            className="h-48 sm:h-56 w-full object-cover group-hover:scale-110 transition-all duration-500"
-                                            loading="lazy"
-                                        />
-                                    ) : (
-                                        <Image
-                                            src={meal.image}
-                                            alt={meal.name}
-                                            className="h-48 sm:h-56 w-full object-cover group-hover:scale-110 transition-all duration-500"
-                                            width={400}
-                                            height={300}
-                                            style={{ objectFit: "cover" }}
-                                        />
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                </div>
-                                <div className="p-6">
-                                    <h4 className="text-gray-800 mb-3 text-lg sm:text-xl font-bold">{meal.name}</h4>
-                                    <div className="flex flex-wrap gap-2 mb-3">
-                                        <span className="px-3 py-1 bg-emerald-100 text-emerald-600 text-xs font-medium rounded-full">
-                                            {meal.calories} cal
-                                        </span>
-                                        <span className="px-3 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-full">
-                                            {meal.protein} protein
-                                        </span>
-                                        <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-medium rounded-full">
-                                            {meal.phase}
-                                        </span>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-4 rounded-xl border border-teal-100 text-center">
+                                            <div className="text-teal-600 mb-2 flex justify-center">
+                                                <Users className="w-5 h-5" />
+                                            </div>
+                                            <div className="text-lg font-bold text-gray-800">10,000+</div>
+                                            <div className="text-xs text-gray-600">Success Stories</div>
+                                        </div>
+                                        <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-4 rounded-xl border border-cyan-100 text-center">
+                                            <div className="text-cyan-600 mb-2 flex justify-center">
+                                                <Award className="w-5 h-5" />
+                                            </div>
+                                            <div className="text-lg font-bold text-gray-800">24/7</div>
+                                            <div className="text-xs text-gray-600">Expert Support</div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-emerald-500">
-                                        {[...Array(5)].map((_, i) => (
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* What is Bariatric Section */}
+                <section className="px-4 sm:px-6 lg:px-8 py-7 bg-white">
+                    <div className={`max-w-7xl mx-auto transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 shadow-xl overflow-hidden rounded-2xl">
+                            <div className="grid lg:grid-cols-2 gap-8 p-8">
+                                <div className="space-y-6">
+                                    <h2 className="text-gray-800 text-3xl font-bold mb-4">
+                                        What is the Bariatric Diet?
+                                    </h2>
+
+                                    <p className="text-gray-600 text-base leading-relaxed font-light">
+                                        The bariatric diet is a specialized nutrition approach designed for patients who have undergone weight loss surgery. By following carefully structured meal plans and portion guidelines, patients experience safe, sustainable weight loss while maintaining proper nutrition and healing.
+                                    </p>
+
+                                    <div className="bg-white p-6 rounded-xl border border-teal-200">
+                                        <h4 className="text-teal-700 mb-3 text-lg font-semibold">
+                                            What You Can Eat
+                                        </h4>
+                                        <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                                            <div className="space-y-2">
+                                                <p className="text-gray-700 font-medium">• Lean Proteins (Chicken, Fish)</p>
+                                                <p className="text-gray-700 font-medium">• Greek Yogurt & Cottage Cheese</p>
+                                                <p className="text-gray-700 font-medium">• Eggs (Various Preparations)</p>
+                                                <p className="text-gray-700 font-medium">• Soft Cooked Vegetables</p>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <p className="text-gray-700 font-medium">• Protein Shakes & Smoothies</p>
+                                                <p className="text-gray-700 font-medium">• Low-Fat Dairy Products</p>
+                                                <p className="text-gray-700 font-medium">• Bone Broth & Clear Soups</p>
+                                                <p className="text-gray-700 font-medium">• Water & Sugar-Free Drinks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid sm:grid-cols-2 gap-4">
+                                        {[
+                                            { title: "Safe Weight Loss", desc: "Lose weight safely with medically-approved portion control" },
+                                            { title: "Improved Health", desc: "Reduce comorbidities and improve overall wellbeing" },
+                                            { title: "Proper Healing", desc: "Support post-surgery recovery with optimal nutrition" },
+                                            { title: "Simplified Eating", desc: "Clear guidelines for each recovery phase" },
+                                            { title: "Better Digestion", desc: "Gentle foods that work with your new stomach" },
+                                            { title: "Stable Energy", desc: "Consistent nutrition prevents fatigue and weakness" }
+                                        ].map((benefit, index) => (
+                                            <div
+                                                key={benefit.title}
+                                                className={`bg-white p-4 rounded-xl border border-teal-100 hover:shadow-md transition-all duration-300 hover:scale-105 ${animatedCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                                            >
+                                                <div className="flex items-start space-x-3">
+                                                    <div>
+                                                        <h5 className="text-gray-800 mb-1 text-base font-medium">
+                                                            {benefit.title}
+                                                        </h5>
+                                                        <p className="text-gray-600 text-sm font-light">
+                                                            {benefit.desc}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl border-l-4 border-teal-500">
+                                        <h4 className="text-teal-700 mb-3 text-lg font-semibold">
+                                            How Does It Work?
+                                        </h4>
+                                        <p className="text-gray-600 font-light mb-3">
+                                            After bariatric surgery, your stomach capacity is significantly reduced. Our phased approach ensures you get adequate protein and nutrients while allowing your body to heal properly and adjust to your new anatomy.
+                                        </p>
+                                        <div className="space-y-2 text-sm text-gray-700">
+                                            <p>• <strong>Phase 1-2:</strong> Clear liquids and full liquids (1-2 weeks)</p>
+                                            <p>• <strong>Phase 3:</strong> Pureed and soft foods (2-4 weeks)</p>
+                                            <p>• <strong>Phase 4+:</strong> Regular solid foods with portion control</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-xl border-l-4 border-cyan-500">
+                                        <h4 className="text-cyan-700 mb-2 text-lg font-semibold">
+                                            Perfect for All Surgery Types!
+                                        </h4>
+                                        <p className="text-gray-600 font-light mb-3">
+                                            Our comprehensive guides work for gastric sleeve, bypass, lap band, and duodenal switch patients at every stage of recovery.
+                                        </p>
+                                        <div className="text-sm text-gray-700 space-y-1">
+                                            <p>✓ Phase-specific meal plans</p>
+                                            <p>✓ Portion control guidelines</p>
+                                            <p>✓ Protein-first recipes</p>
+                                            <p>✓ 24/7 nutritionist support</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="relative">
+                                    <div className="bg-white rounded-2xl p-6 h-full border border-teal-100">
+                                        <div className="relative mb-6">
+                                            <div className="w-full h-auto bg-gradient-to-br from-teal-400 to-cyan-400 rounded-lg shadow-lg flex items-center justify-center" style={{ aspectRatio: '3/2', maxHeight: '500px' }}>
+                                                <Image
+                                                    src={about}
+                                                    alt="Animal-based nutrition foods"
+                                                    className={`w-full h-auto object-contain rounded-lg shadow-lg transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+                                                    style={{ aspectRatio: '3/2', maxHeight: '500px' }}
+                                                />                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h4 className="text-gray-800 text-xl font-bold text-center mb-4">
+                                                Why Bariatric Diet Works
+                                            </h4>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-4 rounded-xl text-center border border-teal-200 hover:scale-105 transition-transform">
+                                                    <div className="text-2xl font-bold text-teal-600">60-80g</div>
+                                                    <div className="text-sm text-gray-600">Daily Protein</div>
+                                                </div>
+                                                <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-4 rounded-xl text-center border border-cyan-200 hover:scale-105 transition-transform">
+                                                    <div className="text-2xl font-bold text-cyan-600">4-6oz</div>
+                                                    <div className="text-sm text-gray-600">Meal Size</div>
+                                                </div>
+                                                <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-4 rounded-xl text-center border border-teal-200 hover:scale-105 transition-transform">
+                                                    <div className="text-2xl font-bold text-teal-600">5-6</div>
+                                                    <div className="text-sm text-gray-600">Small Meals</div>
+                                                </div>
+                                                <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-4 rounded-xl text-center border border-cyan-200 hover:scale-105 transition-transform">
+                                                    <div className="text-2xl font-bold text-cyan-600">64oz</div>
+                                                    <div className="text-sm text-gray-600">Water Daily</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Second Form Section */}
+                <section className="px-4 sm:px-6 lg:px-8 py-7 bg-gradient-to-r from-teal-500 to-cyan-500 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-white/10" />
+                    <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full animate-pulse" />
+                    <div className="absolute bottom-10 left-10 w-24 h-24 bg-white/10 rounded-full animate-bounce" />
+                    <div className="max-w-lg mx-auto relative z-10">
+                        <div className="bg-white/95 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6">
+                            {!formSubmitted ? (
+                                <div>
+                                    <div className="text-center mb-6">
+                                        <div className="w-14 h-14 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse">
+                                            <Gift className="w-5 h-5 text-white" />
+                                        </div>
+                                        <h3 className="text-gray-800 text-xl font-medium mb-2">
+                                            Get Your FREE Guides Now!
+                                        </h3>
+                                        <p className="text-gray-600 font-light">
+                                            Enter your details to start your transformation
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                        <div>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                    <User className="h-4 w-4 text-gray-400" />
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter your full name"
+                                                    className={`w-full h-12 pl-12 pr-4 border rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-300 ${formErrors.name ? 'border-red-500' : 'border-gray-200 hover:border-teal-300'
+                                                        }`}
+                                                />
+                                            </div>
+                                            {formErrors.name && (
+                                                <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                    <Mail className="h-4 w-4 text-gray-400" />
+                                                </div>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter your email address"
+                                                    className={`w-full h-12 pl-12 pr-4 border rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-300 ${formErrors.email ? 'border-red-500' : 'border-gray-200 hover:border-teal-300'
+                                                        }`}
+                                                />
+                                            </div>
+                                            {formErrors.email && (
+                                                <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={!isFormValid}
+                                            className="w-full h-12 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 animate-blinkJump"
+                                        >
+                                            Get My FREE Guides & Start Journey!
+                                        </button>
+                                    </form>
+
+                                    <div className="mt-4 text-center">
+                                        <p className="text-gray-500 text-sm font-light">
+                                            100% secure • No spam
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="w-18 h-18 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center animate-bounce">
+                                        <CheckCircle className="w-7 h-7 text-green-500" />
+                                    </div>
+                                    <h3 className="text-green-600 text-xl font-medium mb-4">
+                                        Welcome {formData.name}!
+                                    </h3>
+                                    <p className="text-gray-600 mb-6 font-light">
+                                        Your free guides are waiting... Answer a few quick questions
+                                    </p>
+                                    <button
+                                        onClick={handleContinueToSurvey}
+                                        className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-8 h-11 rounded-xl font-medium hover:shadow-lg transition-all duration-300"
+                                    >
+                                        Continue to Survey
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Testimonial Carousel */}
+                <section className="px-4 sm:px-6 lg:px-8 py-8 bg-gradient-to-br from-cyan-50 to-teal-50">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+                                Real People, <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">Real Results</span>
+                            </h2>
+                            <p className="text-gray-600 text-lg">Join thousands who have already transformed their lives</p>
+                        </div>
+
+                        <div className="relative">
+                            <div className="bg-white border border-teal-100 rounded-3xl p-8 text-center shadow-2xl">
+                                <div className="mb-6">
+                                    <div className="bg-gradient-to-r from-teal-100 to-cyan-100 px-4 py-2 rounded-full inline-block border border-teal-200 mb-4">
+                                        <span className="text-teal-700 font-semibold text-sm">{testimonials[currentTestimonial].result}</span>
+                                    </div>
+                                </div>
+
+                                <blockquote className="text-lg sm:text-xl text-gray-700 italic mb-6 leading-relaxed">
+                                    {testimonials[currentTestimonial].text}
+                                </blockquote>
+
+                                <div>
+                                    <h4 className="text-gray-800 font-bold text-lg mb-1">{testimonials[currentTestimonial].name}</h4>
+                                    <div className="flex justify-center text-yellow-400 mb-4">
+                                        {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
                                             <Star key={i} className="w-4 h-4 fill-current" />
                                         ))}
                                     </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Testimonials */}
-            <section id="success-stories" className="py-20 bg-gradient-to-br from-emerald-50 to-teal-50 relative z-10">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
-                            Real <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">Success Stories</span>
-                        </h2>
-                        <p className="text-lg sm:text-xl text-gray-600">
-                            See how our personalized meal plans have transformed lives
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
-                        {testimonials.map((testimonial, index) => (
-                            <div key={index} className="text-center bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500">
-                                <div className="mb-6">
-                                    <div className="flex justify-center mb-4">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                                        ))}
-                                    </div>
-                                    <p className="text-base sm:text-lg text-gray-600 italic leading-relaxed mb-6">
-                                        {testimonial.text}
-                                    </p>
-                                </div>
-                                <div className="border-t border-gray-100 pt-4">
-                                    <h4 className="text-gray-800 mb-1 text-lg font-semibold">{testimonial.name}</h4>
-                                    <p className="text-emerald-600 text-sm mb-1 font-medium">{testimonial.surgery}</p>
-                                    <p className="text-gray-500 text-sm">{testimonial.timeframe}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* About Section */}
-            <section id="about" className="py-20 bg-white relative z-10">                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-                    <div data-animate id="about-content">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
-                            Post-Surgery <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">Nutrition Made Simple</span>
-                        </h2>
-
-                        <div className="space-y-6">
-                            <div className="flex items-start space-x-4">
-                                <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <CheckCircle className="w-4 h-4 text-white" />
-                                </div>
-                                <div>
-                                    <h4 className="text-gray-800 mb-2 font-semibold text-lg">Phase-Based Nutrition</h4>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Carefully structured meal plans that progress with your recovery, from clear liquids to solid foods.
-                                    </p>
+                                    <p className="text-teal-600 text-sm font-medium">{testimonials[currentTestimonial].surgery}</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-start space-x-4">
-                                <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <CheckCircle className="w-4 h-4 text-white" />
-                                </div>
-                                <div>
-                                    <h4 className="text-gray-800 mb-2 font-semibold text-lg">Protein-First Approach</h4>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Every meal prioritizes high-quality protein to support healing, muscle preservation, and satiety.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start space-x-4">
-                                <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                                    <CheckCircle className="w-4 h-4 text-white" />
-                                </div>
-                                <div>
-                                    <h4 className="text-gray-800 mb-2 font-semibold text-lg">Vitamin & Mineral Support</h4>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Comprehensive supplementation guidance to prevent deficiencies common after bariatric surgery.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative" data-animate id="about-image">
-                        <div className="relative group">
-                            <Image
-                                src={about}
-                                alt="Healthy meal planning and nutrition"
-                                className="w-full h-80 sm:h-96 object-cover rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
-                        </div>
-
-                        {/* Floating nutrition facts */}
-                        <div className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-xl animate-bounce border-2 border-emerald-100" style={{ animationDelay: '0.5s' }}>
-                            <div className="text-center">
-                                <p className="text-xs text-gray-500">Daily Protein</p>
-                                <p className="text-lg font-bold text-emerald-600">60-80g</p>
-                            </div>
-                        </div>
-                        <div className="absolute -bottom-4 -left-4 bg-white p-4 rounded-2xl shadow-xl animate-bounce border-2 border-teal-100" style={{ animationDelay: '1s' }}>
-                            <div className="text-center">
-                                <p className="text-xs text-gray-500">Meal Size</p>
-                                <p className="text-lg font-bold text-teal-600">4-6oz</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-emerald-500 to-teal-500 text-white relative overflow-hidden z-10">
-                <div className="absolute inset-0 bg-black/10"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-teal-600/20"></div>
-
-                {/* Animated background elements */}
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-                    <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-                    <div className="absolute bottom-20 right-10 w-24 h-24 bg-white/10 rounded-full blur-lg animate-bounce" style={{ animationDelay: '1s' }}></div>
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-                </div>
-
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <div data-animate id="cta-content">
-                        <div className="mb-6">
-                            <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 text-white font-semibold text-sm backdrop-blur-sm">
-                                Limited Time - Free Consultation Included
-                            </span>
-                        </div>
-
-                        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-                            Ready to Transform Your Post-Surgery Journey?
-                        </h2>
-                        <p className="text-lg sm:text-xl text-emerald-100 mb-8 max-w-2xl mx-auto leading-relaxed">
-                            Join thousands of successful bariatric patients who have achieved their weight loss goals with our personalized meal plans
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                            <button onClick={() => router.push("/signup")} className="flex items-center justify-center space-x-2 h-14 px-8 text-lg font-semibold bg-white text-emerald-500 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                                <Target className="w-5 h-5" />
-                                <span>Get Your Custom Plan - $27.99</span>
-                            </button>
-
-                        </div>
-
-                        <div className="flex flex-wrap justify-center gap-6 text-sm text-emerald-100">
-                            <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4" />
-                                <span>30-Day Money Back Guarantee</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4" />
-                                <span>Instant Digital Access</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4" />
-                                <span>Free Nutritionist Support</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer id="contact" className="bg-gray-900 text-white py-16 relative z-10">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-5 md:grid-cols-2 gap-8">
-                        <div className="lg:col-span-2">
-                            <div className="flex items-center space-x-3 mb-6">
-                                <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full flex items-center justify-center shadow-lg">
-                                    <Activity className="w-6 h-6 text-white" />
-                                </div>
-                                <span className="text-3xl font-bold text-white">BariatricPlan</span>
-                            </div>
-                            <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
-                                Your trusted partner for post-bariatric surgery nutrition. We provide medically-approved meal plans
-                                that support your weight loss journey and long-term health goals.
-                            </p>
-                            <div className="flex space-x-4">
-                                <button className="w-10 h-10 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center transition-colors duration-300">
-                                    <Heart className="w-5 h-5 text-white" />
-                                </button>
-                                <button className="w-10 h-10 bg-teal-500 hover:bg-teal-600 rounded-full flex items-center justify-center transition-colors duration-300">
-                                    <Users className="w-5 h-5 text-white" />
-                                </button>
-                                <button className="w-10 h-10 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-300">
-                                    <Shield className="w-5 h-5 text-white" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white mb-4 text-lg font-semibold">Quick Links</h4>
-                            <div className="space-y-3">
-                                {['Home', 'About', 'Plans', 'Success Stories', 'Contact'].map((link) => (
-                                    <div key={link}>
-                                        <a href={`#${link.toLowerCase().replace(' ', '-')}`} className="text-gray-400 hover:text-emerald-400 transition-colors duration-300 block">
-                                            {link}
-                                        </a>
-                                    </div>
+                            <div className="flex justify-center mt-6 space-x-2">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentTestimonial(index)}
+                                        className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentTestimonial
+                                            ? 'bg-teal-500 scale-125'
+                                            : 'bg-gray-300 hover:bg-gray-400'
+                                            }`}
+                                    />
                                 ))}
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <div>
-                            <h4 className="text-white mb-4 text-lg font-semibold">Surgery Types</h4>
-                            <div className="space-y-3">
-                                {['Gastric Sleeve', 'Gastric Bypass', 'Lap Band', 'Duodenal Switch'].map((surgery) => (
-                                    <div key={surgery}>
-                                        <span className="text-gray-400 block">{surgery}</span>
+                {/* Footer */}
+                <footer className="bg-gray-900 px-4 sm:px-6 lg:px-8 py-16 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800" />
+
+                    <div className="max-w-7xl mx-auto relative z-10">
+                        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+                            <div className="lg:col-span-2 space-y-6">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl border border-teal-300/30">
+                                        <Activity className="w-6 h-6 text-white" />
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white mb-4 text-lg font-semibold">Contact Us</h4>
-                            <div className="space-y-4">
-                                <div className="flex items-center space-x-3">
-                                    <Mail className="w-5 h-5 text-emerald-400" />
                                     <div>
-                                        <p className="text-gray-400 text-sm">Email</p>
-                                        <a href="mailto:support@bariatricplan.com" className="text-white hover:text-emerald-400 transition-colors duration-300">
-                                            benywilson3@gmail.com
-                                        </a>
+                                        <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                                            BariatricPlan
+                                        </h1>
+                                        <p className="text-xs text-gray-400 -mt-1">Your transformation partner</p>
                                     </div>
                                 </div>
 
+                                <p className="text-gray-300 leading-relaxed max-w-md">
+                                    Transform your post-surgery journey with medically-approved meal plans. Join thousands who have achieved their weight loss goals safely and sustainably.
+                                </p>
 
+                                <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-2 text-sm text-gray-400">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                        <span>10,000+ Success Stories</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2 text-sm text-gray-400">
+                                        <Heart className="w-4 h-4 text-teal-400" />
+                                        <span>95% Success Rate</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 flex items-center">
+                                    <Target className="w-4 h-4 mr-2 text-teal-400" />
+                                    Quick Links
+                                </h3>
+                                <ul className="space-y-3">
+                                    <li><a href="#science" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">Science & Research</a></li>
+                                    <li><a href="#testimonials" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">Success Stories</a></li>
+                                    <li><a href="#what-is-bariatric" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">What is Bariatric?</a></li>
+                                    <li><a href="#benefits" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">Benefits</a></li>
+                                    <li><a href="#start" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">Start Your Journey</a></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 flex items-center">
+                                    <Shield className="w-4 h-4 mr-2 text-teal-400" />
+                                    Support
+                                </h3>
+                                <ul className="space-y-3">
+                                    <li><a href="#community" className="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm">Community</a></li>
+                                    <li className="flex items-center space-x-2 text-sm text-gray-400">
+                                        <Phone className="w-3 h-3" />
+                                        <span>24/7 Expert Support</span>
+                                    </li>
+                                    <li className="flex items-center space-x-2 text-sm text-gray-400">
+                                        <Mail className="w-3 h-3" />
+                                        <span>support@bariatric.com</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className="mt-12 pt-8 border-t border-gray-800">
+                            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                                <div className="flex items-center space-x-6 text-sm text-gray-400">
+                                    <span>© 2025 BariatricPlan. All rights reserved.</span>
+                                </div>
+
+                                <div className="flex items-center space-x-6 text-sm">
+                                    <a href="#privacy" className="text-gray-400 hover:text-teal-400 transition-colors duration-300">Privacy Policy</a>
+                                    <a href="#terms" className="text-gray-400 hover:text-teal-400 transition-colors duration-300">Terms of Service</a>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </footer>
+            </div>
 
-                    <div className="border-t border-gray-800 mt-12 pt-8">
-                        <div className="flex flex-col md:flex-row justify-between items-center">
-                            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-                                © 2024 BariatricPlan. All rights reserved. Consult your healthcare provider before starting any meal plan.
-                            </p>
-                            <div className="flex space-x-6">
-                                <a onClick={() => router.push("/privacypolicy")} className="cursor-pointer text-gray-400 hover:text-emerald-400 transition-colors text-sm">Privacy Policy</a>
-                                <a onClick={() => router.push("/termsofservice")} className="cursor-pointer text-gray-400 hover:text-emerald-400 transition-colors text-sm">Terms of Service</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
-            {/* Enhanced CSS Animations */}
             <style jsx>{`
-        /* Performance optimizations */
-        .will-change-transform {
-          will-change: transform;
-        }
-
-        /* Reduce motion for accessibility */
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-
-        /* Enhanced animations */
-        @keyframes fadeInUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-        }
-
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-
-        @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-          50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); }
-        }
-        
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-        
-        .bg-size-200 {
-          background-size: 200% 200%;
-        }
-
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-glow {
-          animation: glow 2s ease-in-out infinite;
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(135deg, #10b981, #14b8a6);
-          border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(135deg, #059669, #0d9488);
-        }
-
-        /* Optimized hover effects */
-        .hover-lift {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hover-lift:hover {
-          transform: translateY(-4px);
-        }
-
-        /* Loading animation */
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-
-        /* Pulsing animation for floating elements */
-        @keyframes heartbeat {
-          0%, 100% { transform: scale(1); }
-          25% { transform: scale(1.1); }
-          50% { transform: scale(1); }
-          75% { transform: scale(1.05); }
-        }
-
-        .animate-heartbeat {
-          animation: heartbeat 2s ease-in-out infinite;
-        }
-      `}</style>
+              @keyframes blinkJump {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.7; }
+              }
+              .animate-blinkJump {
+                animation: blinkJump 1.5s infinite;
+              }
+            
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+                
+                @keyframes bounce {
+                    0%, 100% {
+                        transform: translateY(-25%);
+                        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+                    }
+                    50% {
+                        transform: translateY(0);
+                        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+                    }
+                }
+                
+                .animate-pulse {
+                    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+                
+                .animate-bounce {
+                    animation: bounce 1s infinite;
+                }
+            `}</style>
         </div>
     );
 };
 
-export default BariatricMealPlan;
+export default BariatricFunnelPage;

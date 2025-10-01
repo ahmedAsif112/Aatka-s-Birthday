@@ -7,6 +7,7 @@ interface EmailLog {
     email: string;
     timestamp: string;
     status?: string;
+    referrer?: string;
 }
 
 export default function DashboardPage() {
@@ -108,6 +109,7 @@ export default function DashboardPage() {
                                     <th className="px-4 py-2 text-left border-b font-semibold">Email</th>
                                     <th className="px-4 py-2 text-left border-b font-semibold">Timestamp</th>
                                     <th className="px-4 py-2 text-left border-b font-semibold">Status</th>
+                                    <th className="px-4 py-2 text-left border-b font-semibold">Referrer</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,6 +129,10 @@ export default function DashboardPage() {
                                                 {log.status || 'Delivered'}
                                             </span>
                                         </td>
+                                        <td className="px-4 py-2 border-b text-gray-600">
+                                            {log.referrer || 'Direct'} {/* 👈 Show referrer */}
+                                        </td>
+
                                     </tr>
                                 ))}
                             </tbody>
