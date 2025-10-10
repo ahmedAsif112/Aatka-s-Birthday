@@ -1,11 +1,13 @@
 import SuccessPage from '@/components/Success'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = () => {
     return (
 
         <div >
-            <SuccessPage />
+            <Suspense fallback={<div>Loading...</div>}>
+                <SuccessPage />
+            </Suspense>
 
         </div>
     )
