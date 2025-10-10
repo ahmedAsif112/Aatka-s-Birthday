@@ -29,7 +29,7 @@ export default function PlanPage() {
 
         const data = await res.json();
         if (data?.url) {
-            window.location.href = data.url;
+            window.location.href = data.url; // Redirect to PayPal checkout
         } else {
             alert("PayPal order creation failed");
         }
@@ -62,7 +62,7 @@ export default function PlanPage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ planId: selectedPlan }),
+            body: JSON.stringify({ planId: selectedPlan, email }),
         });
 
         if (!res.ok) {
@@ -83,6 +83,7 @@ export default function PlanPage() {
         } else {
             alert('Payment session creation failed.');
         }
+
     };
 
     return (
