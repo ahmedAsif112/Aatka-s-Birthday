@@ -1,34 +1,15 @@
-'use client';
-import './globals.css';
-import { ConfigProvider } from 'antd';
-import { AnimatePresence } from "framer-motion";
-import Analytics from '@/components/Analytics'; // 👈 Add this line
-import ReferralTracker from '@/components/ReferralTracker';
+import type { Metadata } from "next";
+import "./globals.css";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const metadata: Metadata = {
+  title: "Happy Birthday Aatka 💕",
+  description: "A love story, written just for you.",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <ReferralTracker />
-        <Analytics /> {/* 👈 Inject the tracking script */}
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: '#4658A4',
-              colorText: '#6B7A99',
-              colorTextSecondary: '#6B7A99',
-              colorLink: '#4658A4',
-              borderRadius: 5,
-            },
-          }}
-        >
-          <AnimatePresence>{children}</AnimatePresence>
-        </ConfigProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
